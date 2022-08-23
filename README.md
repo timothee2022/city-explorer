@@ -7,3 +7,5 @@ Start time: __3 pm___
 Finish time: __10:40pm___
 
 Actual time needed to complete: _____
+
+Please see attched the Web Request Response Cycle Image.
