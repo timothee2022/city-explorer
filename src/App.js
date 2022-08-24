@@ -24,16 +24,26 @@ class App extends React.Component {
   getCityData = async (e) => {
     e.preventDefault();
 
-    // build out the URL with the query parameters needed to get data back from LocationIQ
+
     let url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`
+
+    let url1 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${cityData.data[0].lat},${cityData.data[0].lon}&zoom=12&size=500x500&format=jpeg`
 
     let cityData = await axios.get(url);
 
     this.setState({
       cityLat: cityData.data[0].lat,
       cityLon: cityData.data[0].lon,
+      mapState: url1,
     })
 
+    catch(error){
+      
+      this.setState({
+        error: true,
+        errorMessage: `An Error Occured: ${error.message}`
+      });
+    }
 
     console.log(cityData.data[0]);
 
@@ -57,6 +67,7 @@ class App extends React.Component {
             <Card.Title>Lattitude</Card.Title>
             <Card.Text>
               {this.state.cityLat}
+
             </Card.Text>
             <Button variant="primary">Display Lattitude</Button>
           </Card.Body>
