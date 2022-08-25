@@ -32,7 +32,7 @@ class App extends React.Component {
 
     let url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`
 
-    let url1 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.cityLat},${this.state.cityLon}&zoom=12&size=500x500&format=jpeg`
+    // let url1 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.cityLat},${this.state.cityLon}&zoom=12&size=500x500&format=jpeg`
 
     try {
       let cityData = await axios.get(url);
@@ -40,7 +40,8 @@ class App extends React.Component {
       this.setState({
         cityLat: cityData.data[0].lat,
         cityLon: cityData.data[0].lon,
-        mapState: url1,
+        showCityData: true,
+        // mapState: url1,
       })
 
       await this.getWeather();
@@ -50,6 +51,7 @@ class App extends React.Component {
 
       this.setState({
         error: true,
+        showCityData: false,
         errorMessage: `An Error Occured: ${error.message}`
       });
     }
@@ -107,19 +109,20 @@ class App extends React.Component {
           <label> <h3>Pick a city!</h3>
             <input type="text" onInput={this.handleInput} />
           </label>
-          <button type='submit'>Explore!</button>
+          <button type='submit' onSubmit={e => this.getCityData(e)} >Explore!</button>
         </form>
-
-        <Card style={{ width: '18rem' }}>
-          <Card.Img variant="top" src="holder.js/100px180" />
-          <Card.Body>
-            <Card.Title>Lattitude</Card.Title>
-            <Card.Text>
-              {this.state.cityLat}
-            </Card.Text>
-            <Button variant="primary">Display Lattitude</Button>
-          </Card.Body>
-        </Card>
+        {this.state.showCityData &&
+          <Card style={{ width: '18rem' }}>
+            <Card.Img variant="top" src="holder.js/100px180" />
+            <Card.Body>
+              <Card.Title></Card.Title>
+              <Card.Text>
+                <p>{this.state.cityLat}</p>
+                <p>{this.state.cityLon}</p>
+              </Card.Text>
+              <Button variant="primary"></Button>
+            </Card.Body>
+          </Card>}
       </>
     );
   }
