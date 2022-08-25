@@ -13,6 +13,7 @@ class App extends React.Component {
       cityLon: 0,
       city: '',
       weather: [],
+      movies: [],
       error: false,
       errorMessage: '',
     }
@@ -43,6 +44,7 @@ class App extends React.Component {
       })
 
       await this.getWeather();
+      await this.getMovies();
 
     } catch (error) {
 
@@ -74,6 +76,24 @@ class App extends React.Component {
 
 
 
+  getMovies = async () => {
+    let url = `${process.env.REACT_APP_SERVER}/movies?query=${this.state.movies}`;
+
+    try {
+      let moviesResponse = await axios.get(url);
+      this.setState({
+        movies: moviesResponse.data
+      })
+    } catch (e) {
+      this.setState({
+        error: true,
+        errorMessage: `An Error Occured: ${e.message}`
+      });
+      console.log(e.message);
+    }
+  }
+
+
   render() {
     console.log(this.state.weather);
     return (
@@ -93,7 +113,6 @@ class App extends React.Component {
             <Card.Title>Lattitude</Card.Title>
             <Card.Text>
               {this.state.cityLat}
-
             </Card.Text>
             <Button variant="primary">Display Lattitude</Button>
           </Card.Body>
