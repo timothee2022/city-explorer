@@ -3,6 +3,8 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Weather from "./Weather";
+import Movies from './Movies';
 
 class App extends React.Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class App extends React.Component {
       movies: [],
       error: false,
       errorMessage: '',
+      mapState: '',
     }
   }
 
@@ -32,16 +35,14 @@ class App extends React.Component {
 
     let url = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`
 
-    // let url1 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.cityLat},${this.state.cityLon}&zoom=12&size=500x500&format=jpeg`
-
+    
     try {
       let cityData = await axios.get(url);
-
+      
       this.setState({
         cityLat: cityData.data[0].lat,
         cityLon: cityData.data[0].lon,
         showCityData: true,
-        // mapState: url1,
       })
 
       await this.getWeather();
@@ -100,7 +101,8 @@ class App extends React.Component {
 
 
   render() {
-    console.log(this.state.weather);
+    console.log(this.state.movies);
+
     return (
       <>
         <h1> City Explorer</h1>
@@ -113,16 +115,19 @@ class App extends React.Component {
         </form>
         {this.state.showCityData &&
           <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" src="holder.js/100px180" />
+            <Card.Img variant="top" src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&center=${this.state.cityLat},${this.state.cityLon}&zoom=12&size=500x500&format=jpeg`} />
             <Card.Body>
               <Card.Title></Card.Title>
               <Card.Text>
-                <p>{this.state.cityLat}</p>
-                <p>{this.state.cityLon}</p>
+                {this.state.cityLat}
+                {this.state.cityLon}
               </Card.Text>
               <Button variant="primary"></Button>
             </Card.Body>
           </Card>}
+
+          <Weather weatherData = {this.state.weather}/>
+          <Movies moviesData = {this.state.movies}/>
       </>
     );
   }
